@@ -20,3 +20,5 @@ backend/coverage/
 # IDE configurations
 backend/.vscode/
 backend/.idea/
+
+#this is ignore file.
