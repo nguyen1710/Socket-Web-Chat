@@ -1,0 +1,22 @@
+# Node modules
+node_modules/
+backend/node_modules
+
+# Logs
+backend/*.log
+
+# Env files
+backend/.env
+
+# OS generated files
+backend/.DS_Store
+backend/Thumbs.db
+
+# Build output
+backend/dist/
+backend/build/
+backend/coverage/
+
+# IDE configurations
+backend/.vscode/
+backend/.idea/

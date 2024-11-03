@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/normalize.css">
+  </head>
+<body>
+  <!-- <div>
+    
+  </div> -->
+  <ul id="ul-message">
+  </ul>
+  <div class="wrapper">
+    <header>
+      <div class="container">
+        <div class="middle">
+          <h3>Tôi</h3>
+          <p>NodeSending -- <%=roomId%></p>
+            </div>
+            <div class="right">
+              
+              <div class="username">
+                <div class="settings"><img src="./img/settings.svg"></div><%=userName%> <div class="user-avatar"><img src="./img/avatar-4.png"></div></div>
+                
+              </div>
+              
+            </div>
+            
+          </header>
+          
+      <main>
+            
+        <div class="col-left" style="position: fixed; top: 0; height: 100%">
+
+            <div class="col-content" >
+
+                <div class="messages">
+                   <li style="text-align: center;">
+                        
+                        <p style="font-size:20px;">Số người trong phòng</p>
+                   </li>
+                    <!-- <li>
+
+                        <div class="avatar">
+                            <div class="avatar-image">
+                                <div class="status online"></div><img src="./img/avatar-2.png"></div>
+                        </div>
+                        <h3>Nancy Scott</h3>
+                        <p>Đang Online</p>
+
+                    </li> -->
+                    <ul id="userList">
+                      <!-- Các mục người dùng sẽ được thêm vào đây -->
+
+                    </ul>
+                    
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col">
+
+            <div class="col-content" style="margin-bottom:5%">
+              
+                <section class="message">
+                    <div class="grid-message">
+                      <!-- <h1 class="notification"></h1> -->
+                        <!-- <div class="col-message-received">
+                            <p>Nancy Scott 9:00 PM</p>
+
+                            <div class="message-received">
+                                <p>Ok.</p>
+                            </div>
+                            
+                        </div> -->
+
+                        <!-- <div class="col-message-sent">
+                            <div class="message-sent">
+                                <p>Not anymore.</p>
+                            </div>
+                        </div> -->
+                    </div>
+                </section>
+
+            </div>
+
+            <div class="col-foot">
+
+                <div class="compose">
+                    <input type="text" id="message" placeholder="message">
+                    <div class="compose-dock">
+                        <!-- <div class="dock"><img src="./img/picture.svg"><img src="./img/smile.svg"></div> -->
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+</div>
+
+
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="js/chat.js"></script>
+
+
+  <!-- <script>
+    const ip_message = document.getElementById('message')
+    const btn_send = document.getElementById('btn-send')
+    const ul_message = document.getElementById('ul-message')
+    const urlParams = new URLSearchParams(window.location.search);
+    const name = urlParams.get('name');
+    const room = urlParams.get('room');
+    let socket = io.connect()
+
+    socket.on("connect", function(data) {
+      socket.emit("join", { room, name });
+    })
+
+
+    ip_message.addEventListener("keydown", () => {
+      
+      if (event.key === "Enter") {
+        const message = ip_message.value
+        if(message) {
+          socket.emit("message", {name, message, room})       
+          ip_message.value = ''
+        }
+        else {
+          console.log("tin nhắn trống")
+        }
+      }
+    })
+
+    function createSentMessage(data) {
+      // Tạo phần tử div với class 'col-message-sent'
+      const colMessageSent = document.createElement('div');
+      colMessageSent.classList.add('col-message-sent');
+      
+      // Tạo phần tử div với class 'message-sent'
+      const messageSent = document.createElement('div');
+      messageSent.classList.add('message-sent');
+      
+      // Tạo phần tử p và thêm nội dung văn bản
+      const messageText = document.createElement('p');
+      messageText.textContent = data.message;
+      
+      // Thêm phần tử p vào trong 'message-sent'
+      messageSent.appendChild(messageText);
+      
+      // Thêm 'message-sent' vào trong 'col-message-sent'
+      colMessageSent.appendChild(messageSent);
+      
+      // Thêm phần tử 'col-message-sent' vào một phần tử cha hiện có trong DOM (ví dụ '.grid-message')
+      document.querySelector('.grid-message').appendChild(colMessageSent);
+      
+      // Sau khi thêm vào DOM, tính toán và đặt chiều cao của 'col-message-sent'
+      const messageSentHeight = messageSent.offsetHeight;  // Lấy chiều cao của 'message-sent'
+      colMessageSent.style.height = (messageSentHeight + 5) + 'px';  // Thêm 10px và đặt chiều cao
+    }
+    
+    function formatTime(date) {
+      let hours = date.getHours();
+      const minutes = date.getMinutes();
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      
+      // Chuyển đổi giờ 24 sang giờ 12
+      hours = hours % 12; 
+      hours = hours ? hours : 12; // Nếu hours là 0 thì hiển thị là 12
+
+      // Định dạng phút
+      const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
+
+      return `${hours}:${formattedMinutes} ${ampm}`;
+    }
+
+    function createReceivedMessage(data) {
+    // Tạo phần tử div với class 'col-message-received'
+    const colMessageReceived = document.createElement('div');
+    colMessageReceived.classList.add('col-message-received');
+
+    // Lấy thời gian hiện tại
+    const now = new Date();
+    const formattedTime = formatTime(now);
+
+    // Tạo phần tử p cho tên người gửi và thời gian
+    const senderTime = document.createElement('p');
+    senderTime.textContent = `${data.name} ${formattedTime}`; // Thay data.senderName bằng tên người gửi
+
+    // Tạo phần tử div với class 'message-received'
+    const messageReceived = document.createElement('div');
+    messageReceived.classList.add('message-received');
+
+    // Tạo phần tử p và thêm nội dung văn bản
+    const messageText = document.createElement('p');
+    messageText.textContent = data.message;
+
+    // Thêm phần tử p cho tên và thời gian vào 'col-message-received'
+    colMessageReceived.appendChild(senderTime);
+    // Thêm phần tử p vào trong 'message-received'
+    messageReceived.appendChild(messageText);
+
+    // Thêm 'message-received' vào trong 'col-message-received'
+    colMessageReceived.appendChild(messageReceived);
+
+    // Thêm phần tử 'col-message-received' vào một phần tử cha hiện có trong DOM (ví dụ '.grid-message')
+    document.querySelector('.grid-message').appendChild(colMessageReceived);
+
+    // Sau khi thêm vào DOM, tính toán và đặt chiều cao của 'col-message-received'
+    const messageReceivedHeight = messageReceived.offsetHeight;  // Lấy chiều cao của 'message-received'
+    colMessageReceived.style.height = (messageReceivedHeight + 25) + 'px';  // Thêm 10px và đặt chiều cao
+}
+
+    socket.on("thread", function(data){
+      if(data.name == name) {
+        createSentMessage(data)
+      }
+      else {
+        createReceivedMessage(data)
+      }
+
+    })
+
+  </script> -->
+</body>
+</html>
